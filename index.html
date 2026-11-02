@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090e1a" />
+  <title>AirSight Pro | National Air Quality Intelligence & Forecasting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Ambient Atmospheric Glows -->
+  <div class="ambient ambient-purple"></div>
+  <div class="ambient ambient-cyan"></div>
+  <div class="ambient ambient-amber"></div>
+
+  <div class="app-shell">
+    <!-- Tactile Neomorphic Sidebar -->
+    <aside class="sidebar neo-surface">
+      <div class="sidebar-top">
+        <a class="brand" href="#">
+          <div class="brand-badge neo-convex">
+            <span class="brand-icon">💨</span>
+          </div>
+          <div class="brand-text">
+            <b>AIRSIGHT<span>PRO</span></b>
+            <small>INTELLIGENCE SUITE</small>
+          </div>
+        </a>
+
+        <div class="side-heading">MONITORING</div>
+        <nav class="nav-menu">
+          <a class="nav-pill neo-convex active" href="#dashboard">
+            <span class="nav-icon">◈</span> Overview & AQI
+          </a>
+          <a class="nav-pill neo-convex" href="#trends">
+            <span class="nav-icon">∿</span> Pollutant Waves
+          </a>
+          <a class="nav-pill neo-convex" href="#forecast">
+            <span class="nav-icon">⌁</span> Predictive Lab
+          </a>
+          <a class="nav-pill neo-convex" href="#leaderboard">
+            <span class="nav-icon">☷</span> National Matrix
+          </a>
+          <a class="nav-pill neo-convex" href="#health-guide">
+            <span class="nav-icon">♥</span> Health Advisory
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="telemetry-card neo-concave">
+          <div class="telemetry-header">
+            <span class="radar-dot pulse-emerald"></span>
+            <b>CPCB Telemetry Feed</b>
+          </div>
+          <p class="telemetry-sub">Multi-state continuous ambient air quality stations (CAAQMS) simulation</p>
+          <div class="telemetry-metric">
+            <span>NETWORK HEALTH</span>
+            <b class="text-emerald">99.8% ONLINE</b>
+          </div>
+        </div>
+
+        <div class="profile-card neo-convex">
+          <div class="avatar neo-concave">IN</div>
+          <div class="profile-info">
+            <b>India Air Quality Grid</b>
+            <small>National CAAQMS Node</small>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Command Center -->
+    <main class="main-content" id="dashboard">
+      <!-- Top Utility Bar -->
+      <header class="topbar">
+        <div class="topbar-title">
+          <div class="badge-cluster">
+            <span class="chip-tag neo-concave"><i class="radar-dot pulse-emerald"></i> REAL-TIME SENSING</span>
+            <span class="chip-tag neo-concave" id="stationCountTag">38 MONITORING STATIONS</span>
+            <span class="chip-tag neo-concave">CPCB / WHO GUIDELINES</span>
+          </div>
+          <h1>National Air Quality <span>Intelligence</span></h1>
+          <p class="subtitle">Tactile hyper-local atmospheric telemetry, multi-state air matrix, and machine forecasting.</p>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="sim-toggle-wrap neo-concave" title="Toggle continuous live micro-telemetry simulation">
+            <span class="sim-label">LIVE STREAM</span>
+            <button class="sim-btn active" id="simToggle">
+              <span class="sim-knob"></span>
+            </button>
+          </div>
+          <button class="action-btn neo-convex" id="exportBtn" title="Export CSV dataset">
+            <span>⇩</span> Export CSV
+          </button>
+          <button class="action-btn neo-convex" id="refreshBtn" title="Refresh Station Sensors">
+            <span>↻</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Advanced Filter Deck (States & Cities Neomorphic Deck) -->
+      <section class="control-deck neo-surface">
+        <div class="filter-group">
+          <label class="control-label">STATE / TERRITORY</label>
+          <div class="neo-select-wrapper neo-concave">
+            <select id="stateSelect">
+              <option value="ALL">All Regions (National View)</option>
+              <option value="Delhi NCR" selected>Delhi NCR</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Telangana">Telangana</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="West Bengal">West Bengal</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Punjab">Punjab</option>
+              <option value="Kerala">Kerala</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Assam">Assam</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <label class="control-label">MONITORED CITY / DISTRICT</label>
+          <div class="neo-select-wrapper neo-concave">
+            <select id="citySelect">
+              <!-- Dynamically populated based on State -->
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-group filter-window">
+          <label class="control-label">TEMPORAL WINDOW</label>
+          <div class="range-pills neo-concave">
+            <button class="range-pill" data-days="1">24H</button>
+            <button class="range-pill" data-days="7">7D</button>
+            <button class="range-pill active" data-days="14">14D</button>
+            <button class="range-pill" data-days="30">30D</button>
+          </div>
+        </div>
+
+        <div class="filter-group reset-group">
+          <label class="control-label">&nbsp;</label>
+          <button class="reset-button neo-convex" id="resetBtn">
+            <span>↺</span> Reset Filters
+          </button>
+        </div>
+      </section>
+
+      <!-- Hero Master Intelligence: AQI Radial Dial + Weather & Health Advisory -->
+      <section class="hero-matrix">
+        <!-- Master AQI Gauge Card -->
+        <article class="aqi-master-card neo-surface">
+          <div class="card-head">
+            <div>
+              <span class="section-eyebrow">COMPOSITE NAQI INDEX</span>
+              <h2 id="currentLocationTitle">Delhi Central · CAAQMS</h2>
+            </div>
+            <div class="aqi-status-badge neo-concave" id="aqiBadge">
+              <span class="badge-dot"></span>
+              <b id="aqiCategoryText">POOR</b>
+            </div>
+          </div>
+
+          <div class="gauge-display-row">
+            <!-- Semi-circle / Circular Visual Arc Gauge -->
+            <div class="gauge-box">
+              <svg class="aqi-gauge-svg" viewBox="0 0 240 140">
+                <defs>
+                  <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#22c55e" />
+                    <stop offset="25%" stop-color="#84cc16" />
+                    <stop offset="50%" stop-color="#eab308" />
+                    <stop offset="75%" stop-color="#f97316" />
+                    <stop offset="90%" stop-color="#ef4444" />
+                    <stop offset="100%" stop-color="#a855f7" />
+                  </linearGradient>
+                </defs>
+                <!-- Arc Track -->
+                <path class="gauge-bg" d="M 30 120 A 90 90 0 0 1 210 120" fill="none" stroke-width="16" stroke-linecap="round" />
+                <!-- Arc Value -->
+                <path class="gauge-fill" id="gaugeFillPath" d="M 30 120 A 90 90 0 0 1 210 120" fill="none" stroke="url(#gaugeGradient)" stroke-width="16" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="100" />
+              </svg>
+              <div class="gauge-center-content">
+                <span class="gauge-value" id="masterAqiValue">248</span>
+                <span class="gauge-unit">NAQI SCORE</span>
+              </div>
+            </div>
+
+            <!-- Health Advisory & Breakdown -->
+            <div class="aqi-analysis-box">
+              <div class="advisory-banner neo-concave" id="advisoryBanner">
+                <div class="advisory-icon" id="advisoryIcon">⚠️</div>
+                <div class="advisory-text">
+                  <b id="advisoryHeadline">Health Alert: Poor Air Quality</b>
+                  <p id="advisoryDesc">Breathing discomfort to most people on prolonged exposure. Sensitive groups should wear N95 respirators outdoors.</p>
+                </div>
+              </div>
+
+              <!-- CPCB Scale Progress Bar -->
+              <div class="cpcb-scale-wrap">
+                <div class="scale-label-row">
+                  <span>Good (0-50)</span>
+                  <span>Mod (101-200)</span>
+                  <span>Poor (201-300)</span>
+                  <span>Severe (401+)</span>
+                </div>
+                <div class="scale-bar neo-concave">
+                  <div class="scale-gradient"></div>
+                  <div class="scale-pointer" id="scalePointer" style="left: 55%;"></div>
+                </div>
+                <div class="primary-pollutant-note">
+                  Dominant Contaminant: <strong id="dominantPollutantText" class="text-violet">PM2.5 (Fine Particulates)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Weather Context Card -->
+        <article class="weather-context-card neo-surface">
+          <div class="card-head">
+            <div>
+              <span class="section-eyebrow">METEOROLOGY</span>
+              <h3>Atmospheric Context</h3>
+            </div>
+            <span class="live-pill neo-concave"><i class="radar-dot pulse-emerald"></i> SENSORS ACTIVE</span>
+          </div>
+
+          <div class="weather-metrics-list">
+            <div class="weather-item neo-concave">
+              <div class="w-icon">🌡️</div>
+              <div class="w-meta">
+                <small>TEMPERATURE</small>
+                <b id="weatherTemp">28.4 °C</b>
+              </div>
+              <span class="w-sub">Thermal Inversion: Low</span>
+            </div>
+
+            <div class="weather-item neo-concave">
+              <div class="w-icon">💧</div>
+              <div class="w-meta">
+                <small>RELATIVE HUMIDITY</small>
+                <b id="weatherHumidity">64 %</b>
+              </div>
+              <span class="w-sub">Dew Point: 20.8 °C</span>
+            </div>
+
+            <div class="weather-item neo-concave">
+              <div class="w-icon">🧭</div>
+              <div class="w-meta">
+                <small>SURFACE WIND</small>
+                <b id="weatherWind">4.8 km/h NW</b>
+              </div>
+              <span class="w-sub text-amber">Stagnant / Low Dispersion</span>
+            </div>
+
+            <div class="weather-item neo-concave">
+              <div class="w-icon">⏲️</div>
+              <div class="w-meta">
+                <small>BAROMETRIC PRESSURE</small>
+                <b id="weatherPressure">1012 hPa</b>
+              </div>
+              <span class="w-sub">Stable High-Pressure System</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Pollutant Spectrum Grid (6 Tactile Neomorphic Cards) -->
+      <section class="pollutant-cards-grid">
+        <!-- PM2.5 -->
+        <article class="p-card neo-surface active" data-pollutant="PM2.5">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge purple">PM2.5</span>
+              <h4>Fine Particulate</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 60 µg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_pm25">-- <small>µg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill purple-fill" id="bar_pm25" style="width: 70%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_pm25">1.8x CPCB Standard</span>
+            <span class="p-trend up" id="trend_pm25">↑ +4.2%</span>
+          </div>
+        </article>
+
+        <!-- PM10 -->
+        <article class="p-card neo-surface" data-pollutant="PM10">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge blue">PM10</span>
+              <h4>Coarse Inhalable</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 100 µg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_pm10">-- <small>µg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill blue-fill" id="bar_pm10" style="width: 60%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_pm10">1.2x CPCB Standard</span>
+            <span class="p-trend down" id="trend_pm10">↓ -2.5%</span>
+          </div>
+        </article>
+
+        <!-- NO2 -->
+        <article class="p-card neo-surface" data-pollutant="NO₂">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge mint">NO₂</span>
+              <h4>Nitrogen Dioxide</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 80 µg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_no2">-- <small>µg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill mint-fill" id="bar_no2" style="width: 45%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_no2">Within Safe Limit</span>
+            <span class="p-trend neutral" id="trend_no2">● Stable</span>
+          </div>
+        </article>
+
+        <!-- O3 -->
+        <article class="p-card neo-surface" data-pollutant="O₃">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge amber">O₃</span>
+              <h4>Ground Ozone</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 100 µg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_o3">-- <small>µg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill amber-fill" id="bar_o3" style="width: 32%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_o3">Photochemical Normal</span>
+            <span class="p-trend up" id="trend_o3">↑ +1.1%</span>
+          </div>
+        </article>
+
+        <!-- SO2 -->
+        <article class="p-card neo-surface" data-pollutant="SO₂">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge cyan">SO₂</span>
+              <h4>Sulfur Dioxide</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 80 µg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_so2">-- <small>µg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill cyan-fill" id="bar_so2" style="width: 20%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_so2">Industrial Minimal</span>
+            <span class="p-trend down" id="trend_so2">↓ -0.8%</span>
+          </div>
+        </article>
+
+        <!-- CO -->
+        <article class="p-card neo-surface" data-pollutant="CO">
+          <div class="p-card-top">
+            <div class="p-title-wrap">
+              <span class="p-badge rose">CO</span>
+              <h4>Carbon Monoxide</h4>
+            </div>
+            <span class="cpcb-tag neo-concave">STD: 2.0 mg/m³</span>
+          </div>
+          <div class="p-card-body">
+            <div class="p-value" id="val_co">-- <small>mg/m³</small></div>
+            <div class="p-meter neo-concave">
+              <div class="p-meter-fill rose-fill" id="bar_co" style="width: 48%;"></div>
+            </div>
+          </div>
+          <div class="p-card-foot">
+            <span class="p-benchmark" id="bench_co">Vehicular Trace</span>
+            <span class="p-trend up" id="trend_co">↑ +0.3%</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- In-Depth Analytics Section (Chart & Mix) -->
+      <section class="analytics-grid" id="trends">
+        <!-- Main Wave Chart -->
+        <article class="chart-panel neo-surface">
+          <div class="chart-panel-header">
+            <div>
+              <span class="section-eyebrow">TEMPORAL ANALYSIS</span>
+              <h2>Atmospheric Wave & Pollutant Dispersion</h2>
+              <p>Continuous daily baseline progression vs statutory safe thresholds</p>
+            </div>
+            <div class="chart-action-pills">
+              <span class="threshold-legend"><i class="dash-icon"></i> CPCB Safe Limit Threshold</span>
+              <div class="metric-selector-pills neo-concave">
+                <button class="m-pill active" data-metric="PM2.5">PM2.5</button>
+                <button class="m-pill" data-metric="PM10">PM10</button>
+                <button class="m-pill" data-metric="NO₂">NO₂</button>
+                <button class="m-pill" data-metric="O₃">O₃</button>
+                <button class="m-pill" data-metric="AQI">AQI</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="chart-canvas-wrap">
+            <canvas id="trendChart"></canvas>
+          </div>
+
+          <div class="chart-footer-row">
+            <div class="chart-stat-item">
+              <small>PEAK RECORDED</small>
+              <b id="chartStatPeak">--</b>
+            </div>
+            <div class="chart-stat-item">
+              <small>PERIOD AVERAGE</small>
+              <b id="chartStatAvg">--</b>
+            </div>
+            <div class="chart-stat-item">
+              <small>MINIMUM RECORDED</small>
+              <b id="chartStatMin">--</b>
+            </div>
+            <div class="chart-stat-item">
+              <small>VARIANCE VOLATILITY</small>
+              <b class="text-violet" id="chartStatVariance">Moderate (σ 14.2)</b>
+            </div>
+          </div>
+        </article>
+
+        <!-- Donut & Pollutant Distribution -->
+        <article class="distribution-panel neo-surface">
+          <div class="card-head">
+            <div>
+              <span class="section-eyebrow">CHEMICAL BURDEN</span>
+              <h3>Pollutant Contribution</h3>
+              <p>Relative weight in ambient toxicity</p>
+            </div>
+          </div>
+
+          <div class="donut-display-wrap">
+            <div class="donut-canvas-box">
+              <canvas id="mixChart"></canvas>
+              <div class="donut-hole-center">
+                <b id="donutCenterScore">100%</b>
+                <small>COMPOSITE</small>
+              </div>
+            </div>
+
+            <div class="mix-list-breakdown" id="mixListBreakdown">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Forecast Intelligence Lab -->
+      <section class="forecast-section neo-surface" id="forecast">
+        <div class="forecast-section-header">
+          <div>
+            <span class="section-eyebrow">PREDICTIVE INTELLIGENCE</span>
+            <h2>Baseline Machine Forecast & Horizon Projections</h2>
+            <p>Chronological autoregressive baseline with 72-hour confidence boundaries</p>
+          </div>
+          <span class="model-badge neo-concave">⚡ ARIMA + MOVING-AVERAGE HYBRID ENSEMBLE</span>
+        </div>
+
+        <div class="forecast-grid-layout">
+          <!-- Left Projection Card -->
+          <div class="forecast-summary-pane neo-concave">
+            <div class="projection-head">
+              <small>T+24H ESTIMATED LOAD</small>
+              <div class="proj-val" id="forecastValue">-- <small>µg/m³</small></div>
+              <div class="proj-target">Estimated for <b id="forecastPollutantLabel" class="text-violet">PM2.5</b></div>
+            </div>
+
+            <div class="confidence-strip">
+              <div class="conf-top">
+                <span>ESTIMATE CONFIDENCE</span>
+                <b class="text-emerald">94.6%</b>
+              </div>
+              <div class="conf-bar neo-concave">
+                <div class="conf-fill" style="width: 94.6%;"></div>
+              </div>
+            </div>
+
+            <div class="forecast-parameters">
+              <div class="f-param">
+                <small>FORECAST HORIZON</small>
+                <b>72 Hours (3 Days)</b>
+              </div>
+              <div class="f-param">
+                <small>TRAINING WINDOW</small>
+                <b>14 Days CAAQMS</b>
+              </div>
+              <div class="f-param">
+                <small>UNCERTAINTY ENVELOPE</small>
+                <b>± 8.4 µg/m³ (80% CI)</b>
+              </div>
+              <div class="f-param">
+                <small>WIND DISPERSION FACTOR</small>
+                <b class="text-amber">Adverse Inversion</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Forecast Wave Chart -->
+          <div class="forecast-chart-pane">
+            <div class="forecast-canvas-wrap">
+              <canvas id="forecastChart"></canvas>
+            </div>
+            <div class="forecast-chart-legend">
+              <span><i class="dot purple"></i> Past 7 Days Observed</span>
+              <span><i class="dot emerald"></i> T+24H Forecast Projected</span>
+              <span><i class="dot dashed-cyan"></i> 80% Confidence Interval Band</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- National State & City Leaderboard (Requested feature: States Matrix) -->
+      <section class="national-matrix-section neo-surface" id="leaderboard">
+        <div class="matrix-header">
+          <div>
+            <span class="section-eyebrow">NATIONAL BENCHMARK MATRIX</span>
+            <h2>Multi-State Air Quality Ranking</h2>
+            <p>Real-time comparative standings across major Indian states and urban hubs. Click any row to load telemetry.</p>
+          </div>
+          <div class="matrix-stats-pills">
+            <span class="stat-pill neo-concave">🟢 Cleanest: <b id="cleanestCityTag">Mysuru (22)</b></span>
+            <span class="stat-pill neo-concave">🔴 Most Critical: <b id="worstCityTag">Patna (312)</b></span>
+          </div>
+        </div>
+
+        <div class="table-responsive neo-concave">
+          <table class="national-table">
+            <thead>
+              <tr>
+                <th>RANK</th>
+                <th>STATE / REGION</th>
+                <th>CITY</th>
+                <th>AQI SCORE</th>
+                <th>STATUS</th>
+                <th>PM2.5</th>
+                <th>PM10</th>
+                <th>24H DELTA</th>
+                <th>QUICK ACTION</th>
+              </tr>
+            </thead>
+            <tbody id="nationalTableBody">
+              <!-- Dynamically populated with all states and cities -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Health Protection & Precaution Matrix -->
+      <section class="health-guide-section neo-surface" id="health-guide">
+        <div class="card-head">
+          <div>
+            <span class="section-eyebrow">CPCB ADVISORY GUIDELINES</span>
+            <h2>Health Protection & Exposure Protocol</h2>
+            <p>Actionable medical-grade precautions tuned to current air toxicity</p>
+          </div>
+        </div>
+
+        <div class="health-advisory-cards">
+          <div class="health-card neo-concave">
+            <div class="h-icon neo-convex">😷</div>
+            <h4>Mask & Respiratory Protection</h4>
+            <p id="healthMaskText">N95 or FFP2 respirators recommended during morning and evening rush hours for sensitive individuals.</p>
+          </div>
+
+          <div class="health-card neo-concave">
+            <div class="h-icon neo-convex">🏃‍♂️</div>
+            <h4>Outdoor Sports & Cardio</h4>
+            <p id="healthSportsText">Reschedule strenuous outdoor workouts between 6 AM - 9 AM when particulate concentration is highest.</p>
+          </div>
+
+          <div class="health-card neo-concave">
+            <div class="h-icon neo-convex">🏡</div>
+            <h4>Indoor Air Purification</h4>
+            <p id="healthHomeText">Keep windows closed during peak traffic hours; deploy HEPA filter purifiers in sleeping spaces.</p>
+          </div>
+
+          <div class="health-card neo-concave">
+            <div class="h-icon neo-convex">👶</div>
+            <h4>Children & Senior Citizens</h4>
+            <p id="healthSeniorsText">Vulnerable respiratory groups should stay indoors and keep prescribed bronchodilators accessible.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Observation Log Table -->
+      <section class="table-section neo-surface">
+        <div class="card-head">
+          <div>
+            <span class="section-eyebrow">RAW TELEMETRY AUDIT</span>
+            <h2>Recent CAAQMS Observations Log</h2>
+            <p>Chronological station timestamps and multi-gas calibrated readings</p>
+          </div>
+          <button class="action-btn neo-convex" onclick="exportCSV()">Download Dataset (.CSV)</button>
+        </div>
+
+        <div class="table-responsive neo-concave">
+          <table>
+            <thead>
+              <tr>
+                <th>TIMESTAMP (IST)</th>
+                <th>LOCATION</th>
+                <th>AQI</th>
+                <th>PM2.5 (µg/m³)</th>
+                <th>PM10 (µg/m³)</th>
+                <th>NO₂ (µg/m³)</th>
+                <th>O₃ (µg/m³)</th>
+                <th>SO₂ (µg/m³)</th>
+                <th>CO (mg/m³)</th>
+                <th>AUDIT STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="readingsBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Executive Footer -->
+      <footer class="app-footer">
+        <div class="footer-meta">
+          <b>AIRSIGHT PRO</b> · ENTERPRISE ENVIRONMENTAL INTELLIGENCE SUITE
+        </div>
+        <p>Built with Neomorphic Spatial Architecture · Synthesized Continuous CAAQMS Benchmarks · Data aligned with CPCB National Air Quality Standards</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
